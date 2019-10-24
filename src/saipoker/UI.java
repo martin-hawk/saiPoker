@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package saipoker;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- *
- * @author marty
- */
 public class UI {
 
     private Scanner reader;
@@ -29,6 +20,7 @@ public class UI {
 
             System.out.println("P - Play");
             System.out.println("X - Exit");
+            System.out.println("[Enter letter and press Enter]");
             System.out.print(">> ");
             String choise = reader.nextLine().toUpperCase();
 
@@ -51,11 +43,62 @@ public class UI {
                     System.out.println(game.get(1));
 
                     System.out.println("");
-                    returnWinner(game);
+                    determineWinner(game);
                     break;
             }
             game.clear();
         }
+    }
+
+    public void determineWinner(ArrayList<PokerHand> thisGame) {
+        int winner = 0;
+        int loser = 0;
+        int[] scores = new int[2];
+        String[] combinations = new String[2];
+
+        for (int i = 0; i < thisGame.size(); i++) {
+            if (thisGame.get(i).isRoyalFlush()) {
+                scores[i] = 10;
+                combinations[i] = "Royal Flush";
+            } else if (thisGame.get(i).isStraightFlush()) {
+                scores[i] = 9;
+                combinations[i] = "Straight Flush";
+            } else if (thisGame.get(i).isFourKind()) {
+                scores[i] = 8;
+                combinations[i] = "Four of a Kind";
+            } else if (thisGame.get(i).isFullHouse()) {
+                scores[i] = 7;
+                combinations[i] = "Full House";
+            } else if (thisGame.get(i).isFlush()) {
+                scores[i] = 6;
+                combinations[i] = "Flush";
+            } else if (thisGame.get(i).isStraight()) {
+                scores[i] = 5;
+                combinations[i] = "Straight";
+            } else if (thisGame.get(i).isThreeKind()) {
+                scores[i] = 4;
+                combinations[i] = "Three of a Kind";
+            } else if (thisGame.get(i).isTwoPair()) {
+                scores[i] = 3;
+                combinations[i] = "Two Pair";
+            } else if (thisGame.get(i).isPair()) {
+                scores[i] = 2;
+                combinations[i] = "Pair";
+            } else if (thisGame.get(i).isHighCard()) {
+                scores[i] = 1;
+                combinations[i] = "High Card";
+            } else {
+                scores[i] = 0;
+                combinations[i] = "no combination";
+            }
+        }
+
+        winner = (scores[0] > scores[1]) ? 0 : 1;
+        loser = (scores[0] < scores[1]) ? 0 : 1;
+
+        System.out.println("Player " + (winner + 1) + " wins with " + combinations[winner] + " because");
+        System.out.println("Player " + (loser + 1) + " only has " + combinations[loser] + ".");
+        System.out.println("");
     }
 
     static Card generateCard() {
@@ -64,12 +107,5 @@ public class UI {
         int suit = random.nextInt(3);
         Card cardToReturn = new Card(Rank.values()[rank], Suit.values()[suit]);
         return cardToReturn;
-    }
-
-    static void returnWinner(ArrayList<PokerHand> thisGame) {
-        //thisGame.add(null);
-        System.out.println("Player " + 2 + " wins with " + "Thee of kiunbf" + " because");
-        System.out.println("Player " + 2 + "only has " + "something");
-        System.out.println("");
     }
 }
